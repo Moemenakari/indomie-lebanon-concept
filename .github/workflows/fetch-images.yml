@@ -3,10 +3,7 @@ name: Fetch product photos
 # Downloads the real product photos from sfs.com.lb, cuts out the white background
 # and commits them, so the site never hotlinks SFS.
 on:
-  workflow_dispatch:
-  push:
-    branches: [homepage-concept]
-    paths: [scripts/fetch-images.mjs, .github/workflows/fetch-images.yml]
+  workflow_dispatch: # Actions tab → Fetch product photos → Run workflow
 
 permissions:
   contents: write

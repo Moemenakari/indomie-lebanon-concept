@@ -68,4 +68,4 @@ export const PRODUCTS: Product[] = [
 ];
 
 export const byFormat = (format: Format) => PRODUCTS.filter((p) => p.format === format);
-export const photoFor = (p: Product) => (PHOTOS.has(p.id) ? `/products/${p.id}.png` : null);
+export const photoFor = (p: Product) => (PHOTOS.has(p.id) ? `/products/${p.id}.webp` : null);

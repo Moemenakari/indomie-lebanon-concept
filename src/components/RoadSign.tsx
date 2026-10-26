@@ -1,5 +1,12 @@
 import { PLACES_LEFT, PLACES_RIGHT, type Place } from '../data/themes';
 
+/** Road-sign arrow: thick shaft with a wide head, as on Lebanese direction signs. */
+const Arrow = ({ flip }: { flip?: boolean }) => (
+  <svg className="arrow" viewBox="0 0 40 24" aria-hidden="true" style={flip ? { transform: 'scaleX(-1)' } : undefined}>
+    <path d="M2 9h22V2l14 10-14 10v-7H2Z" fill="currentColor" />
+  </svg>
+);
+
 interface Props {
   current: Place;
   onPick?: (place: Place) => void;
@@ -12,9 +19,9 @@ export function RoadSign({ current, onPick, compact }: Props) {
     const on = place === current;
     const content = (
       <>
-        {dir === 'left' && <span className="arrow" aria-hidden="true">←</span>}
+        {dir === 'left' && <Arrow flip />}
         <span className="name">{place}</span>
-        {dir === 'right' && <span className="arrow" aria-hidden="true">→</span>}
+        {dir === 'right' && <Arrow />}
       </>
     );
     return onPick ? (
@@ -23,13 +30,20 @@ export function RoadSign({ current, onPick, compact }: Props) {
       <div key={place} className={`sign-row ${dir}${on ? ' on' : ''}`}>{content}</div>
     );
   };
+  const board = (places: Place[], dir: 'left' | 'right') => (
+    <div className="sign-board">
+      {['tl', 'tr', 'bl', 'br'].map((b) => <i key={b} className={`bolt ${b}`} aria-hidden="true" />)}
+      {places.map((p) => row(p, dir))}
+    </div>
+  );
   return (
     <div className={`roadsign${compact ? ' compact' : ''}`} aria-label="Road sign of Lebanese regions">
       <div className="sign-boards">
-        <div className="sign-board">{PLACES_RIGHT.map((p) => row(p, 'right'))}</div>
-        <div className="sign-board">{PLACES_LEFT.map((p) => row(p, 'left'))}</div>
+        {board(PLACES_RIGHT, 'right')}
+        {board(PLACES_LEFT, 'left')}
       </div>
-      <span className="sign-pole" aria-hidden="true" />
+      <span className="sign-pole" aria-hidden="true"><i className="clamp c1" /><i className="clamp c2" /></span>
+      <span className="sign-base" aria-hidden="true" />
     </div>
   );
 }

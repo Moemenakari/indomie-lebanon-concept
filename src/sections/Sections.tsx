@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { SITE } from '../config/site';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, photoFor } from '../data/products';
 import { THEMES, themeForPlace, type Place, type Theme } from '../data/themes';
 import { RoadSign } from '../components/RoadSign';
 import { ProductArt } from '../components/hero/ProductArt';
@@ -34,7 +34,7 @@ export function NewArrivals({ onPick }: { onPick: (id: string) => void }) {
               style={{ background: `linear-gradient(150deg, ${t.tones[0]}, ${t.tones[1]})`, color: t.ink }}
               {...reveal} transition={{ ...reveal.transition, delay: i * 0.1 }} whileHover={{ y: -6 }}>
               <span className="arrival-date">{a.date}</span>
-              <span className="arrival-art"><ProductArt product={p} /></span>
+              <span className="arrival-art">{photoFor(p) ? <img src={photoFor(p)!} alt={p.name} loading="lazy" /> : <ProductArt product={p} />}</span>
               <span className="arrival-name">{p.name}</span>
               <span className="arrival-line">{a.line}</span>
               <span className="arrival-cta">See it in the hero →</span>

@@ -107,21 +107,37 @@ button { font: inherit; color: inherit; }
 .scroll-cue span { position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: var(--ink); animation: cue 1.6s ease-in-out infinite; }
 @keyframes cue { 60% { transform: translateY(12px); opacity: 0; } }
 
-/* ---------- road sign ---------- */
-.roadsign { display: inline-flex; flex-direction: column; align-items: center; }
-.sign-boards { display: grid; gap: 6px; }
-.sign-board { display: grid; gap: 3px; padding: 7px; border-radius: 10px; background: #1b5fae; box-shadow: inset 0 0 0 2.5px #fff, inset 0 0 0 5px #1b5fae, 0 12px 24px -12px rgba(0,0,0,.5); min-width: 210px; }
-.sign-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 10px; color: #fff; font-weight: 700; font-size: 1rem; border: 0; background: transparent; border-radius: 6px; transition: background .3s, color .3s; text-align: left; }
-.sign-row.left .name { margin-right: auto; margin-left: 10px; }
+/* ---------- road sign: painted steel, retroreflective film, galvanised pole ---------- */
+.roadsign { position: relative; display: inline-flex; flex-direction: column; align-items: center; perspective: 900px; }
+.sign-boards { position: relative; z-index: 1; display: grid; gap: 8px; transform: rotateY(-10deg); transform-style: preserve-3d; }
+.sign-board { position: relative; display: grid; gap: 2px; padding: 12px 12px; min-width: 230px; border-radius: 9px;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 32%, rgba(255,255,255,0) 70%, rgba(255,255,255,.08) 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 2px, transparent 2px 4px),
+    linear-gradient(180deg, #1667c2, #0d4f9e);
+  box-shadow: inset 0 0 0 3px #0d4f9e, inset 0 0 0 6px #f4f6f8, inset 0 0 0 7px rgba(0,0,0,.15),
+    4px 0 0 #8c97a3, 5px 1px 0 #6e7883, 14px 18px 24px -10px rgba(0,0,0,.55); }
+.bolt { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #b9c2cc 45%, #6f7a86); box-shadow: 0 1px 1px rgba(0,0,0,.4); }
+.bolt.tl { top: 10px; left: 10px; } .bolt.tr { top: 10px; right: 10px; } .bolt.bl { bottom: 10px; left: 10px; } .bolt.br { bottom: 10px; right: 10px; }
+.sign-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 5px 14px; color: #fff; font-family: 'Overpass', var(--body); font-weight: 800; font-size: 1.05rem; letter-spacing: .01em; border: 0; background: transparent; border-radius: 4px; text-align: left; text-shadow: 0 0 1px rgba(255,255,255,.6); transition: background .3s, color .3s; }
+.sign-row.left .name { margin-right: auto; margin-left: 12px; }
+.arrow { width: 30px; height: 18px; flex: none; }
 button.sign-row { cursor: pointer; }
-button.sign-row:hover { background: rgba(255,255,255,.14); }
-.sign-row.on { background: #ffd23f; color: #0e2f55; }
-.arrow { font-size: 1.15rem; }
-.sign-pole { width: 10px; height: 70px; background: linear-gradient(90deg, #8a96a3, #d7dde3, #8a96a3); border-radius: 0 0 4px 4px; }
+button.sign-row:hover { background: rgba(255,255,255,.12); }
+.sign-row.on { background: linear-gradient(180deg, #ffe066, #f5c400); color: #0d2f5c; text-shadow: none; box-shadow: 0 0 18px rgba(255,214,0,.55); }
+.sign-pole { position: relative; width: 14px; height: 210px; margin-top: -70px; border-radius: 7px 7px 0 0;
+  background: linear-gradient(90deg, #5f6a75 0%, #c9d1d8 30%, #f2f5f7 42%, #a7b1bb 60%, #6b7682 85%, #4d5660 100%); box-shadow: 6px 0 10px -4px rgba(0,0,0,.35); }
+.clamp { position: absolute; left: -4px; width: 22px; height: 7px; border-radius: 2px; background: linear-gradient(90deg, #4d5660, #b9c2cc 40%, #6f7a86); }
+.clamp.c1 { top: 4px; } .clamp.c2 { top: 30px; }
+.sign-base { width: 46px; height: 8px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.35), transparent); }
 .roadsign.compact .sign-boards { grid-auto-flow: column; align-items: start; }
-.roadsign.compact .sign-board { min-width: 128px; padding: 5px; }
-.roadsign.compact .sign-row { font-size: .72rem; padding: 2px 7px; }
-.roadsign.compact .sign-pole { height: 40px; width: 7px; }
+.roadsign.compact .sign-board { min-width: 150px; padding: 9px 8px; }
+.roadsign.compact .sign-row { font-size: .78rem; padding: 3px 9px; gap: 8px; }
+.roadsign.compact .arrow { width: 22px; height: 13px; }
+.roadsign.compact .bolt { width: 5px; height: 5px; }
+.roadsign.compact .bolt.tl, .roadsign.compact .bolt.bl { left: 6px; } .roadsign.compact .bolt.tr, .roadsign.compact .bolt.br { right: 6px; }
+.roadsign.compact .bolt.tl, .roadsign.compact .bolt.tr { top: 6px; } .roadsign.compact .bolt.bl, .roadsign.compact .bolt.br { bottom: 6px; }
+.roadsign.compact .sign-pole { width: 10px; height: 130px; margin-top: -40px; }
 
 /* ---------- sections ---------- */
 .section { padding: clamp(64px, 9vw, 120px) clamp(16px, 5vw, 72px); max-width: 1440px; margin: 0 auto; }
@@ -156,8 +172,8 @@ button.sign-row:hover { background: rgba(255,255,255,.14); }
 .panel-b { grid-column: 3; grid-row: 1 / 3; flex-direction: column; }
 .ing { position: relative; margin: 0; width: 100%; max-width: 190px; aspect-ratio: 1; }
 .ing-big { max-width: 320px; }
-.panel-a .ing { max-width: 230px; }
-.panel-b .ing { max-width: 170px; }
+.panel-a .ing { max-width: 290px; }
+.panel-b .ing { max-width: 220px; }
 .ing svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .ing img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); aspect-ratio: 1; border-radius: 50%; filter: drop-shadow(0 10px 14px rgba(0,0,0,.25)); }
 .ing-label { font: 800 11px var(--body); letter-spacing: .08em; fill: #fff; }
@@ -225,4 +241,7 @@ button.sign-row:hover { background: rgba(255,255,255,.14); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .2s !important; }
 }
-.pv-pack img { transform: rotate(-7deg); }
+.pv-pack img, .pv-pack .pv-sheen { transform: rotate(-7deg); }
+.pv-pack img { width: 112%; margin-left: -6%; }
+.pv-pack .pv-sheen { left: -6%; right: -6%; }
+.arrival-art img { display: block; width: 100%; height: auto; }

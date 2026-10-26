@@ -41,7 +41,7 @@ npm run build && npm run e2e   # Playwright smoke test at 400×860 and 1440×900
 npm run fetch-images   # download product photos from sfs.com.lb and cut out the white background
 ```
 
-Until `fetch-images` has run, products are drawn as illustrated stand-in packs and cups.
+Product photos live in `public/products` (WebP cut-outs). To refresh them, run the **Fetch product photos** workflow in the Actions tab.
 
 ## Credits
 Product names, prices and links come from [sfs.com.lb](https://sfs.com.lb/?s=indomie&post_type=product) (Al Sultan Food Stuff), checked 26 Oct 2026. "Order" buttons open the real SFS product page, with no fake checkout. Indomie is a trademark of its owner.
