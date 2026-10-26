@@ -17,7 +17,7 @@ export function ProductVisual({ product, active }: { product: Product; active: b
         <div className="pv-tilt">
           {photo ? (
             <>
-              <img src={photo} alt={`${product.name}, ${product.weight}`} draggable={false} />
+              <img src={photo} alt={`${product.name}, ${product.weight}`} draggable={false} decoding="async" loading={active ? 'eager' : 'lazy'} fetchPriority={active ? 'high' : 'low'} width={600} height={product.format === 'cup' ? 600 : 430} />
               <span className="pv-sheen" style={mask} aria-hidden="true" />
             </>
           ) : (

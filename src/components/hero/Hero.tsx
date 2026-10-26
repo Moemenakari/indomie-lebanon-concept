@@ -26,10 +26,30 @@ export function Hero({ format, onFormat, items, pos, onStep, product, theme }: P
   const calm = useMedia('(prefers-reduced-motion: reduce)');
   const [ready, setReady] = useState(false);
 
+  // The 3D layer is decoration. Desktop starts it once the page is idle; phones wait for the
+  // first touch or scroll so the 800 KB of three.js never competes with the first paint.
   useEffect(() => {
-    const id = window.setTimeout(() => setReady(true), 350);
-    return () => window.clearTimeout(id);
-  }, []);
+    let idle = 0;
+    const go = () => setReady(true);
+    const interactions = ['pointerdown', 'scroll', 'keydown'] as const;
+    const start = () => {
+      if (phone && !new URLSearchParams(window.location.search).has('demo')) {
+        interactions.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
+        return;
+      }
+      idle = typeof window.requestIdleCallback === 'function'
+        ? window.requestIdleCallback(go, { timeout: 2500 })
+        : window.setTimeout(go, 1200);
+    };
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+    return () => {
+      window.removeEventListener('load', start);
+      interactions.forEach((e) => window.removeEventListener(e, go));
+      if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle);
+      window.clearTimeout(idle);
+    };
+  }, [phone]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -60,7 +80,7 @@ export function Hero({ format, onFormat, items, pos, onStep, product, theme }: P
 
       <div className="hero-inner">
         <div className="hero-copy" aria-live="polite">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 18 }}

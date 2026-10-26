@@ -51,7 +51,7 @@ export function RingCarousel({ items, pos, radius, onStep }: Props) {
             style={{ zIndex: pose.z, pointerEvents: pose.opacity ? 'auto' : 'none' }}
             onClick={() => off !== 0 && onStep(off)}
           >
-            <ProductVisual product={p} active={off === 0} />
+            {Math.abs(off) <= 2 && <ProductVisual product={p} active={off === 0} />}
           </motion.button>
         );
       })}

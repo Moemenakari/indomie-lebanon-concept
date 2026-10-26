@@ -34,7 +34,7 @@ async function cutOut(buf) {
     if (p >= w) stack.push(p - w);
     if (p < w * (h - 1)) stack.push(p + w);
   }
-  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).trim({ threshold: 1 }).resize({ width: 720, height: 720, fit: 'inside' }).webp({ quality: 84, alphaQuality: 90 }).toBuffer();
+  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).trim({ threshold: 1 }).resize({ width: 600, height: 600, fit: 'inside' }).webp({ quality: 80, alphaQuality: 85, effort: 6 }).toBuffer();
 }
 
 mkdirSync(new URL('../public/products/', import.meta.url), { recursive: true });
