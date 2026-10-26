@@ -41,7 +41,7 @@ mkdirSync(new URL('../public/products/', import.meta.url), { recursive: true });
 const ok = [];
 for (const { id, url } of items) {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (concept site image fetch)', Accept: 'image/webp,image/*' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const png = await cutOut(Buffer.from(await res.arrayBuffer()));
     writeFileSync(new URL(`../public/products/${id}.png`, import.meta.url), png);

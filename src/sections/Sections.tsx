@@ -90,65 +90,24 @@ export function TasteOfLebanon({ current, onPlace }: { current: Theme; onPlace: 
   );
 }
 
-type Ingredient = { name: string; colors: string[]; shape: 'cube' | 'pea' | 'chunk' };
+type Ingredient = { name: string; img: string };
 const PANELS: { bg: string; items: Ingredient[] }[] = [
-  { bg: '#EEA33A', items: [
-    { name: 'Mixed peppers', colors: ['#E53935', '#FDD835', '#43A047'], shape: 'cube' },
-    { name: 'Peas', colors: ['#6DBE45', '#58A63A', '#8BD05F'], shape: 'pea' },
-  ] },
-  { bg: '#C9A57A', items: [
-    { name: 'Onion', colors: ['#F7E8F2', '#E9C9DE', '#FFFFFF'], shape: 'cube' },
-    { name: 'Carrot', colors: ['#FB8C00', '#F57C00', '#FFA040'], shape: 'cube' },
-    { name: 'Mushrooms', colors: ['#EADBC8', '#D9C3A5', '#BFA181'], shape: 'chunk' },
-  ] },
+  { bg: '#EEA33A', items: [{ name: 'Mixed peppers', img: 'peppers' }, { name: 'Peas', img: 'peas' }] },
+  { bg: '#C9A57A', items: [{ name: 'Onion', img: 'onion' }, { name: 'Carrot', img: 'carrot' }, { name: 'Mushrooms', img: 'mushrooms' }] },
 ];
 
-/** A top-down bowl filled with diced ingredients, its name curved over the rim — like the recipe post. */
-function IngredientBowl({ ing, delay }: { ing: Ingredient; delay: number }) {
-  const id = ing.name.replace(/\s/g, '');
-  let seed = ing.name.length * 97;
-  const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
-  const bits = Array.from({ length: 70 }, (_, i) => {
-    const a = rnd() * Math.PI * 2;
-    const r = Math.sqrt(rnd()) * 33;
-    return { x: 60 + Math.cos(a) * r, y: 66 + Math.sin(a) * r, c: ing.colors[i % ing.colors.length], rot: rnd() * 90 };
-  });
+/** A real bowl photo with its name curved over the rim, like the 23 Sep recipe post. */
+function IngredientBowl({ ing, delay, big }: { ing: Ingredient; delay: number; big?: boolean }) {
+  const id = ing.img;
+  const r = big ? 62 : 46;
   return (
-    <motion.figure className="ing" initial={{ opacity: 0, scale: 0.7, rotate: -12 }} whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+    <motion.figure className={`ing${big ? ' ing-big' : ''}`} initial={{ opacity: 0, scale: 0.7, rotate: -12 }} whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
       viewport={{ once: true }} transition={{ type: 'spring', stiffness: 140, damping: 14, delay }}>
-      <svg viewBox="0 0 120 120" role="img" aria-label={ing.name}>
-        <defs><path id={`arc-${id}`} d="M14 66 A46 46 0 0 1 106 66" /></defs>
+      <svg viewBox="0 0 160 160" aria-hidden="true">
+        <defs><path id={`arc-${id}`} d={big ? 'M10 96 A70 70 0 0 1 64 12' : `M${80 - r - 10} 80 A${r + 10} ${r + 10} 0 0 1 ${80 + r + 10} 80`} /></defs>
         <text className="ing-label"><textPath href={`#arc-${id}`} startOffset="50%" textAnchor="middle">{ing.name.toUpperCase()}</textPath></text>
-        <circle cx={60} cy={70} r={44} fill="rgba(0,0,0,.18)" />
-        <circle cx={60} cy={66} r={44} fill="#fff" />
-        <circle cx={60} cy={66} r={38} fill="#f3f1ec" />
-        {bits.map((b, i) =>
-          ing.shape === 'pea' ? <circle key={i} cx={b.x} cy={b.y} r={3.6} fill={b.c} /> :
-          ing.shape === 'chunk' ? <path key={i} d={`M${b.x} ${b.y} h6 l-1 5 h-4 Z`} fill={b.c} transform={`rotate(${b.rot} ${b.x} ${b.y})`} /> :
-          <rect key={i} x={b.x - 3} y={b.y - 3} width={6} height={6} rx={1} fill={b.c} transform={`rotate(${b.rot} ${b.x} ${b.y})`} />,
-        )}
       </svg>
-    </motion.figure>
-  );
-}
-
-function ChickenPlate() {
-  return (
-    <motion.figure className="ing ing-chicken" initial={{ opacity: 0, scale: 0.7 }} whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }} transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.25 }}>
-      <svg viewBox="0 0 160 160" role="img" aria-label="Grilled chicken">
-        <defs><path id="arc-chicken" d="M14 84 A66 66 0 0 1 60 18" /></defs>
-        <text className="ing-label"><textPath href="#arc-chicken" startOffset="50%" textAnchor="middle">CHICKEN</textPath></text>
-        <circle cx={84} cy={88} r={64} fill="rgba(0,0,0,.18)" />
-        <circle cx={84} cy={84} r={64} fill="#fff" />
-        {[[66, 84, -20], [104, 84, 15]].map(([x, y, r], i) => (
-          <g key={i} transform={`rotate(${r} ${x} ${y})`}>
-            <ellipse cx={x} cy={y} rx={17} ry={40} fill="#D7A060" />
-            <ellipse cx={x} cy={y} rx={13} ry={35} fill="#E7B878" />
-            {[-24, -12, 0, 12, 24].map((dy) => <path key={dy} d={`M${x - 13} ${y + dy + 6} l26 -10`} stroke="#6B3A12" strokeWidth={3} strokeLinecap="round" opacity={0.8} />)}
-          </g>
-        ))}
-      </svg>
+      <img src={`/recipe/${ing.img}.webp`} alt={ing.name} loading="lazy" style={{ width: `${(r * 2 * 100) / 160}%` }} />
     </motion.figure>
   );
 }
@@ -165,7 +124,7 @@ export function Recipe({ theme }: { theme: Theme }) {
         <div className="panel panel-a" style={{ background: PANELS[0].bg }}>
           {PANELS[0].items.map((ing, i) => <IngredientBowl key={ing.name} ing={ing} delay={i * 0.1} />)}
         </div>
-        <div className="panel panel-chicken"><ChickenPlate /></div>
+        <div className="panel panel-chicken"><IngredientBowl ing={{ name: 'Chicken', img: 'chicken' }} delay={0.25} big /></div>
         <div className="panel panel-b" style={{ background: PANELS[1].bg }}>
           {PANELS[1].items.map((ing, i) => <IngredientBowl key={ing.name} ing={ing} delay={0.2 + i * 0.1} />)}
         </div>
@@ -203,7 +162,7 @@ export function Footer() {
       </div>
       <p className="fine">
         Unofficial concept, not affiliated with Indomie or its distributors. Product photos and prices from sfs.com.lb (Al Sultan Food Stuff), checked {SITE.checkedOn}.
-        Indomie is a trademark of its owner. Scenes and illustrations are original.
+        Recipe photos from @indomielebanon (23 Sep 2026). Indomie is a trademark of its owner. Scenes and illustrations are original.
       </p>
       <div className="footer-links">
         <a href={SITE.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a>

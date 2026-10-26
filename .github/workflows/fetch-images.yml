@@ -1,0 +1,30 @@
+name: Fetch product photos
+
+# Downloads the real product photos from sfs.com.lb, cuts out the white background
+# and commits them, so the site never hotlinks SFS.
+on:
+  workflow_dispatch:
+  push:
+    branches: [homepage-concept]
+    paths: [scripts/fetch-images.mjs, .github/workflows/fetch-images.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/fetch-images.mjs
+      - name: Commit photos
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/products src/data/photos.ts
+          git diff --cached --quiet || (git commit -m "Add real product photos from sfs.com.lb" && git push)
