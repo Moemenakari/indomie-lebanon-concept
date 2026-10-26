@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { SITE } from '../config/site';
 import { PRODUCTS, photoFor } from '../data/products';
+import { CITY_XY, LEBANON_PATH, MAP_H, MAP_W, NEIGHBOUR_PATHS } from '../data/lebanon';
 import { THEMES, themeForPlace, type Place, type Theme } from '../data/themes';
 import { RoadSign } from '../components/RoadSign';
 import { ProductArt } from '../components/hero/ProductArt';
@@ -46,20 +47,7 @@ export function NewArrivals({ onPick }: { onPick: (id: string) => void }) {
   );
 }
 
-// Lebanon outline, projected from rough lon/lat border points.
-const BORDER: [number, number][] = [
-  [35.97, 34.64], [36.35, 34.65], [36.45, 34.59], [36.62, 34.47], [36.6, 34.2], [36.36, 33.84], [36.27, 33.62],
-  [35.98, 33.42], [35.82, 33.3], [35.6, 33.27], [35.1, 33.09], [35.2, 33.27], [35.37, 33.56], [35.47, 33.89],
-  [35.62, 34.0], [35.64, 34.12], [35.66, 34.25], [35.72, 34.33], [35.82, 34.44],
-];
-const CITIES: Record<Place, [number, number]> = {
-  Tripoli: [35.84, 34.43], Batroun: [35.66, 34.25], Beirut: [35.5, 33.89], Saida: [35.38, 33.56],
-  Tyre: [35.2, 33.27], Zahle: [35.9, 33.85], Bekaa: [36.2, 34.0],
-};
-const proj = ([lon, lat]: [number, number]): [number, number] => [((lon - 35.05) / 1.62) * 220 + 10, ((34.72 - lat) / 1.66) * 330 + 10];
-
 export function TasteOfLebanon({ current, onPlace }: { current: Theme; onPlace: (p: Place) => void }) {
-  const outline = BORDER.map((pt, i) => `${i ? 'L' : 'M'}${proj(pt).join(' ')}`).join(' ') + ' Z';
   return (
     <section id="lebanon" className="section lebanon">
       <motion.header className="section-head" {...reveal}>
@@ -69,18 +57,31 @@ export function TasteOfLebanon({ current, onPlace }: { current: Theme; onPlace: 
       </motion.header>
       <div className="lebanon-grid">
         <motion.div {...reveal}><RoadSign current={current.place} onPick={onPlace} /></motion.div>
-        <motion.svg className="map" viewBox="0 0 240 350" {...reveal} role="group" aria-label="Map of Lebanon">
-          <path d={outline} fill={current.tones[0]} stroke={current.tones[2]} strokeWidth={2.5} strokeLinejoin="round" />
-          {(Object.keys(CITIES) as Place[]).map((place) => {
-            const [x, y] = proj(CITIES[place]);
+        <motion.svg className="map" viewBox={`0 0 ${MAP_W} ${MAP_H}`} {...reveal} role="group" aria-label="Map of Lebanon">
+          <defs>
+            <clipPath id="map-frame"><rect width={MAP_W} height={MAP_H} rx={28} /></clipPath>
+            <pattern id="sea-lines" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M0 7 q3.5 -3 7 0 t7 0" stroke="#fff" strokeOpacity=".35" fill="none" /></pattern>
+          </defs>
+          <g clipPath="url(#map-frame)">
+            <rect width={MAP_W} height={MAP_H} fill="#9fd3ec" />
+            <rect width={MAP_W} height={MAP_H} fill="url(#sea-lines)" />
+            {NEIGHBOUR_PATHS.map((d, i) => <path key={i} d={d} fill="#efe7da" stroke="#d6cab6" strokeWidth={1} />)}
+            <path d={LEBANON_PATH} fill={current.tones[0]} stroke={current.tones[2]} strokeWidth={2.5} strokeLinejoin="round" className="map-lb" />
+            <text x={16} y={110} className="map-sea">Mediterranean</text>
+            <text x={16} y={126} className="map-sea">Sea</text>
+            <text x={MAP_W - 22} y={330} textAnchor="middle" className="map-country" transform={`rotate(-90 ${MAP_W - 22} 330)`}>SYRIA</text>
+          </g>
+          {(Object.keys(CITY_XY) as Place[]).map((place) => {
+            const [x, y] = CITY_XY[place];
             const on = place === current.place;
             const t = themeForPlace(place);
+            const east = place === 'Bekaa' || place === 'Zahle';
             return (
               <g key={place} className="map-city" role="button" tabIndex={0} aria-label={`${place}: ${t.spot}`} aria-pressed={on}
                 onClick={() => onPlace(place)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onPlace(place)}>
-                {on && <circle cx={x} cy={y} r={14} fill={t.tones[2]} opacity={0.25} className="map-pulse" />}
+                {on && <circle cx={x} cy={y} r={14} fill={t.tones[2]} opacity={0.3} className="map-pulse" />}
                 <circle cx={x} cy={y} r={on ? 7 : 5} fill={t.tones[2]} stroke="#fff" strokeWidth={2} />
-                <text x={x + (place === 'Bekaa' || place === 'Zahle' ? 10 : -10)} y={y + 4} textAnchor={place === 'Bekaa' || place === 'Zahle' ? 'start' : 'end'}>{place}</text>
+                <text x={x + (east ? 10 : -10)} y={y + 4} textAnchor={east ? 'start' : 'end'}>{place}</text>
               </g>
             );
           })}
@@ -162,7 +163,7 @@ export function Footer() {
       </div>
       <p className="fine">
         Unofficial concept, not affiliated with Indomie or its distributors. Product photos and prices from sfs.com.lb (Al Sultan Food Stuff), checked {SITE.checkedOn}.
-        Recipe photos from @indomielebanon (23 Sep 2026). Indomie is a trademark of its owner. Scenes and illustrations are original.
+        Recipe photos from @indomielebanon (23 Sep 2026). Map data: Natural Earth. Indomie is a trademark of its owner. Scenes and illustrations are original.
       </p>
       <div className="footer-links">
         <a href={SITE.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a>

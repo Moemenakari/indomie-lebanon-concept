@@ -156,8 +156,12 @@ button.sign-row:hover { background: rgba(255,255,255,.12); }
 .arrival-cta { margin-top: 6px; font-weight: 700; }
 
 .lebanon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; justify-items: center; }
-.map { width: min(100%, 340px); height: auto; overflow: visible; }
-.map path { transition: fill .6s, stroke .6s; }
+.map { width: min(100%, 380px); height: auto; overflow: visible; filter: drop-shadow(0 24px 30px rgba(0,0,0,.18)); }
+.map-lb { filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
+.map-sea { font: italic 600 11px var(--body); fill: #2f7fa8; opacity: .8; }
+.map-country { font: 700 10px var(--body); letter-spacing: .3em; fill: #a8977c; }
+.map-city text { paint-order: stroke; stroke: rgba(255,255,255,.85); stroke-width: 3px; }
+.map .map-lb { transition: fill .6s, stroke .6s; }
 .map-city { cursor: pointer; }
 .map-city text { font: 700 11px var(--body); fill: var(--text); }
 .map-pulse { animation: pulse 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
