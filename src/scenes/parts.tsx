@@ -9,12 +9,17 @@ export function Layer({ depth, children }: { depth: number; children: ReactNode 
   );
 }
 
-/** Scalloped band from the campaign posters. */
+/** Row of overlapping circles from the campaign posters. */
 export function WaveBand({ y, color, r = 22, w = 1000 }: { y: number; color: string; r?: number; w?: number }) {
-  let d = `M0 500 L0 ${y}`;
-  for (let x = 0; x < w; x += r * 2) d += ` a${r} ${r} 0 0 1 ${r * 2} 0`;
-  d += ` L${w} 500 Z`;
-  return <path d={d} fill={color} />;
+  const n = Math.ceil(w / (r * 1.9)) + 1;
+  return (
+    <g>
+      <rect x={0} y={y + r * 0.6} width={w} height={500 - y} fill={color} />
+      {Array.from({ length: n }, (_, i) => (
+        <circle key={i} cx={i * r * 1.9} cy={y + r} r={r} fill={color} stroke="#fff" strokeOpacity={0.18} strokeWidth={1.5} />
+      ))}
+    </g>
+  );
 }
 
 export function Palm({ x, y, h, color, lean = 1 }: { x: number; y: number; h: number; color: string; lean?: number }) {

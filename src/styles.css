@@ -44,6 +44,15 @@ button { font: inherit; color: inherit; }
 .wallpaper, .wp-layer { position: absolute; inset: 0; }
 .wallpaper { z-index: -3; }
 .wp-word { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%) translate(calc(var(--px) * -14px), 0); font-family: var(--display); font-weight: 800; font-size: clamp(5rem, 17vw, 17rem); line-height: .85; text-transform: uppercase; white-space: nowrap; opacity: .14; letter-spacing: -.02em; transition: transform .6s ease-out; }
+.wp-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.13) 0 46px, transparent 47px); background-size: 110px 110px; background-position: 20px 0; }
+.motifs { position: absolute; inset: 0; width: 100%; height: 100%; }
+.burst { position: absolute; left: 50%; top: 44%; width: 165%; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; animation: burstIn .7s var(--ease) both; }
+.burst-petals { transform-origin: center; animation: spin 40s linear infinite; }
+.burst-flakes { transform-origin: center; animation: drift 6s ease-in-out infinite; }
+@keyframes burstIn { from { opacity: 0; transform: translate(-50%, -50%) scale(.5); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes drift { 50% { transform: scale(1.06) rotate(4deg); } }
+.pv-pack .art { width: 108%; margin-left: -4%; transform: rotate(-7deg); }
 .scene { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 52%; }
 .particles { position: absolute !important; inset: 0; z-index: -2; pointer-events: none; }
 .hero-inner { position: relative; min-height: 100svh; display: grid; grid-template-columns: minmax(300px, 1fr) minmax(0, 1.5fr); align-items: center; gap: 24px; padding: 96px clamp(16px, 5vw, 72px) 210px; max-width: 1440px; margin: 0 auto; }
@@ -59,7 +68,7 @@ button { font: inherit; color: inherit; }
 .hero-stage { position: relative; height: min(640px, 72svh); }
 .wheel { position: absolute; inset: 0; transform-origin: 50% 120%; }
 .ring { position: absolute; inset: 0; touch-action: pan-y; user-select: none; }
-.ring-item { position: absolute; left: 50%; top: 6%; width: var(--size); margin-left: calc(var(--size) / -2); padding: 0; border: 0; background: none; cursor: pointer; will-change: transform; }
+.ring-item { position: absolute; left: 50%; top: 13%; width: var(--size); margin-left: calc(var(--size) / -2); padding: 0; border: 0; background: none; cursor: pointer; will-change: transform; }
 .ring-item[aria-selected='true'] { cursor: default; }
 
 .pv { position: relative; perspective: 900px; }
@@ -140,9 +149,17 @@ button.sign-row:hover { background: rgba(255,255,255,.14); }
 
 .recipe { max-width: none; transition: background .6s; }
 .recipe > * { max-width: 1296px; margin-left: auto; margin-right: auto; }
-.bowls { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 36px; }
-.bowl { display: grid; justify-items: center; gap: 8px; padding: 18px 10px; background: #fff; border-radius: var(--r); box-shadow: 0 16px 30px -24px rgba(0,0,0,.5); font-weight: 700; text-align: center; font-size: .92rem; }
-.bowl svg { width: 90px; }
+.recipe-board { display: grid; grid-template-columns: 1.2fr 1fr .7fr; grid-template-rows: auto auto; gap: 18px; padding: clamp(16px, 3vw, 32px); margin-bottom: 36px; border-radius: 32px; background: #C9524A; }
+.panel { display: flex; justify-content: center; align-items: center; gap: 12px; padding: 14px; border-radius: 6px; }
+.panel-a { grid-column: 1 / 3; }
+.panel-chicken { grid-column: 1 / 3; grid-row: 2; }
+.panel-b { grid-column: 3; grid-row: 1 / 3; flex-direction: column; }
+.ing { margin: 0; width: 100%; max-width: 190px; }
+.ing-chicken { max-width: 300px; }
+.panel-a .ing { max-width: 230px; }
+.panel-b .ing { max-width: 160px; }
+.ing svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ing-label { font: 800 10px var(--body); letter-spacing: .08em; fill: #fff; }
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0; list-style: none; counter-reset: s; }
 .steps li { counter-increment: s; padding: 20px; border-radius: var(--r); background: rgba(255,255,255,.8); line-height: 1.5; }
 .steps li::before { content: counter(s); display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 10px; border-radius: 50%; background: var(--ink); color: #fff; font-family: var(--display); font-weight: 800; transition: background .6s; }
@@ -181,8 +198,9 @@ button.sign-row:hover { background: rgba(255,255,255,.14); }
   .nav nav.open { opacity: 1; transform: none; pointer-events: auto; }
   .nav nav a { padding: .8em 1em; }
   .hero-inner { grid-template-columns: 1fr; padding: 84px 16px 96px; gap: 0; align-content: start; }
-  .hero-stage { order: -1; height: 330px; }
-  .ring-item { top: 2%; }
+  .hero-stage { order: -1; height: 310px; }
+  .ring-item { top: 6%; }
+  .pv-pack { margin-top: 34px; }
   .hero-copy { max-width: none; text-align: center; margin-top: 6px; }
   .hero-copy h1 { font-size: 2.3rem; margin-bottom: 8px; }
   .blurb { margin: 0 auto 12px; font-size: 1rem; }
@@ -197,7 +215,10 @@ button.sign-row:hover { background: rgba(255,255,255,.14); }
   .wp-word { top: 30%; font-size: 6.5rem; }
   .scene { height: 40%; }
   .arrivals, .lebanon-grid, .steps { grid-template-columns: 1fr; }
-  .bowls { grid-template-columns: repeat(3, 1fr); }
+  .recipe-board { grid-template-columns: 1fr 1fr; padding: 12px; gap: 10px; }
+  .panel-a { grid-column: 1 / 3; }
+  .panel-chicken { grid-column: 1; grid-row: 2; }
+  .panel-b { grid-column: 2; grid-row: 2; }
   .concept-badge { right: 50%; transform: translateX(50%); bottom: 10px; font-size: .72rem; white-space: nowrap; }
 }
 @media (prefers-reduced-motion: reduce) {
