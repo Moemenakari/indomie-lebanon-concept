@@ -143,6 +143,7 @@ export function WhereToBuy() {
   return (
     <section id="buy" className="section">
       <motion.div className="buy-card" {...reveal}>
+        <img className="buy-logo" src="/brand/indomie-logo.png" alt="" width="120" height="78" />
         <div>
           <p className="kicker">Where to buy</p>
           <h2>Order from Al Sultan Food Stuff</h2>
@@ -154,11 +155,23 @@ export function WhereToBuy() {
   );
 }
 
+/** The yellow and green swoosh from the Indomie flag, used as a section edge. */
+export function BrandSwoosh({ flip }: { flip?: boolean }) {
+  return (
+    <svg className={`swoosh${flip ? ' flip' : ''}`} viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40 C360 0 720 90 1080 40 S1440 10 1440 10 V0 H0 Z" fill="var(--paper)" />
+      <path d="M0 40 C360 0 720 90 1080 40 S1440 10 1440 10 V28 C1440 28 1260 70 1080 60 C720 108 360 18 0 58 Z" fill="#FFD100" />
+      <path d="M0 58 C360 18 720 108 1080 60 C1260 70 1440 28 1440 28 V46 C1440 46 1260 88 1080 78 C720 126 360 36 0 76 Z" fill="#3BA935" />
+    </svg>
+  );
+}
+
 export function Footer() {
   return (
     <footer className="footer">
+      <BrandSwoosh />
       <div className="footer-top">
-        <a className="wordmark" href="#/">indomie <small>Lebanon</small></a>
+        <a className="wordmark" href="#/"><img src="/brand/indomie-logo.png" alt="Indomie" width="110" height="72" /><small>Lebanon</small></a>
         <p>{SITE.tagline}. Designed &amp; built by <a href={SITE.linkedinUrl} target="_blank" rel="noreferrer">{SITE.author}</a>.</p>
       </div>
       <p className="fine">

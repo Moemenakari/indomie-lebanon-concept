@@ -13,7 +13,7 @@ export function Nav() {
   ];
   return (
     <header className="nav">
-      <a className="wordmark" href="#/" aria-label="Indomie Lebanon concept, home">indomie <small>Lebanon</small></a>
+      <a className="wordmark" href="#/" aria-label="Indomie Lebanon concept, home"><img src="/brand/indomie-logo.png" alt="Indomie" width="92" height="60" /><small>Lebanon</small></a>
       <button type="button" className="burger" aria-expanded={open} aria-controls="nav-links" aria-label="Menu" onClick={() => setOpen(!open)}>
         <span /><span />
       </button>
@@ -50,6 +50,7 @@ export function ConceptModal() {
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="concept-title" onKeyDown={(e) => e.key === 'Escape' && close()}>
       <div className="modal">
+        <img className="modal-logo" src="/brand/indomie-logo.png" alt="" width="84" height="55" />
         <span className="modal-chip">Unofficial website · UI/UX demo</span>
         <h2 id="concept-title">This is not the official Indomie website.</h2>
         <p>
@@ -75,6 +76,7 @@ export function ComingSoon({ page }: { page: string }) {
   return (
     <main className="soon">
       <div className="soon-card">
+        <img className="modal-logo" src="/brand/indomie-logo.png" alt="" width="84" height="55" />
         <span className="modal-chip">{page || 'Page'} · coming soon</span>
         <h1>We focused on the homepage.</h1>
         <p>This concept was an experiment in one page done properly. This page is coming soon, if the community wants it.</p>
