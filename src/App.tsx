@@ -51,7 +51,7 @@ export default function App() {
       )}
       <Footer />
       <ConceptBadge />
-      <ConceptModal skip={demo} />
+      <ConceptModal />
     </div>
   );
 }

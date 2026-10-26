@@ -205,6 +205,8 @@ button.sign-row:hover { background: rgba(255,255,255,.12); }
 .modal .by a { color: var(--ink); font-weight: 700; }
 .modal-chip { display: inline-block; padding: 5px 12px; border-radius: 999px; background: var(--t0); color: var(--ink); font-weight: 700; font-size: .78rem; }
 .modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 12px; }
+.modal-note { margin: 14px 0; padding: 12px 14px; border-radius: 14px; background: var(--t0); color: var(--ink); line-height: 1.5; font-size: .95rem; }
+.modal-note a { font-weight: 700; }
 .modal-src { font-size: .85rem; color: var(--muted); }
 @keyframes fade { from { opacity: 0; } }
 @keyframes pop { from { opacity: 0; transform: translateY(20px) scale(.96); } }

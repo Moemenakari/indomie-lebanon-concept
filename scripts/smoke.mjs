@@ -23,7 +23,7 @@ for (const [name, viewport] of [['phone', { width: 400, height: 860 }], ['deskto
   await page.waitForTimeout(800);
   check(await page.getByRole('dialog').isVisible(), `${name}: concept modal on first visit`);
   await page.screenshot({ path: `shots/${name}-0-modal.png` });
-  await page.getByRole('button', { name: 'Explore the concept' }).click();
+  await page.getByRole('button', { name: 'I understand, explore the demo' }).click();
   await page.waitForTimeout(1500);
   check(await page.locator('.concept-badge').isVisible(), `${name}: badge visible`);
   check((await page.locator('h1').innerText()).includes('Hot & Spicy'), `${name}: starts on Hot & Spicy`);

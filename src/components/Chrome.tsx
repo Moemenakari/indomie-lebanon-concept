@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { SITE } from '../config/site';
-import { readFlag, writeFlag } from '../lib/storage';
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -35,30 +34,38 @@ export function ConceptBadge() {
   );
 }
 
-const SEEN = 'indomie-concept-seen';
+/** How long after closing the notice before it shows again. */
+export const NOTICE_REPEAT_MS = 60_000;
 
-export function ConceptModal({ skip }: { skip: boolean }) {
-  const [show, setShow] = useState(false);
+/** The disclaimer opens on every visit and comes back a minute after it's closed. */
+export function ConceptModal() {
+  const [show, setShow] = useState(true);
   useEffect(() => {
-    if (!skip && !readFlag(SEEN)) setShow(true);
-  }, [skip]);
+    if (show) return;
+    const id = window.setTimeout(() => setShow(true), NOTICE_REPEAT_MS);
+    return () => window.clearTimeout(id);
+  }, [show]);
   if (!show) return null;
-  const close = () => { writeFlag(SEEN); setShow(false); };
+  const close = () => setShow(false);
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="concept-title" onKeyDown={(e) => e.key === 'Escape' && close()}>
       <div className="modal">
-        <span className="modal-chip">Concept · not the official site</span>
-        <h2 id="concept-title">This is a simple homepage template.</h2>
+        <span className="modal-chip">Unofficial website · UI/UX demo</span>
+        <h2 id="concept-title">This is not the official Indomie website.</h2>
         <p>
-          An unofficial concept: a marketing experiment for brands in the Lebanese market, and extra practice for the developer.
-          Real products and prices from SFS. Scenes, motion and 3D built from scratch.
+          It's a demo homepage, built to test UI/UX ideas: a marketing and design experiment for the Lebanese market.
+          All trademarks, product names and photos belong to their respective owners.
         </p>
-        <p className="by">Designed &amp; built by <a href={SITE.linkedinUrl} target="_blank" rel="noreferrer">{SITE.author}</a></p>
+        <div className="modal-note">
+          <strong>No ordering or payment happens here.</strong> Want to buy? Contact{' '}
+          <a href={SITE.indomieUrl} target="_blank" rel="noreferrer">Indomie Lebanon</a> directly, or shop on{' '}
+          <a href={SITE.sourceUrl} target="_blank" rel="noreferrer">sfs.com.lb</a>.
+        </div>
+        <p className="by">Thank you for your understanding. Designed &amp; built by <a href={SITE.linkedinUrl} target="_blank" rel="noreferrer">{SITE.author}</a></p>
         <div className="modal-actions">
-          <button type="button" className="btn btn-primary" onClick={close} autoFocus>Explore the concept</button>
+          <button type="button" className="btn btn-primary" onClick={close} autoFocus>I understand, explore the demo</button>
           <a className="btn btn-ghost" href={SITE.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn ↗</a>
         </div>
-        <a className="modal-src" href={SITE.githubUrl} target="_blank" rel="noreferrer">Source code on GitHub</a>
       </div>
     </div>
   );
